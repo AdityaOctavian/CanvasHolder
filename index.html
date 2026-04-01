@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Holder V2 lebih smooth dikit</title>
+    <style>
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8ecef;
+            margin: 0;
+        }
+
+        .canvas-wrapper {
+            padding: 10px;
+        }
+
+        .canvas-item {
+            width: 400px;
+            height: 400px;
+            background-color: #ffffff;
+            border: 2px solid #222;
+            cursor: none;
+        }
+    </style>
+</head>
+
+<body class="page">
+    <div class="canvas-wrapper">
+        <canvas id="Canvass" class="canvas-item" width="400" height="400"></canvas>
+    </div>
+
+    <script>
+        const board = document.querySelector("#Canvass");
+        const pen = board.getContext("2d");
+        const RADIUS = 30;
+        let currentX = board.width / 2;
+        let currentY = board.height / 2;
+        let targetX = currentX;
+        let targetY = currentY;
+
+        function renderCircle(x, y) {
+            pen.clearRect(0, 0, board.width, board.height);
+            pen.beginPath();
+            pen.arc(x, y, RADIUS, 0, Math.PI * 2);
+            pen.fillStyle = "green";
+            pen.fill();
+            pen.lineWidth = 4;
+            pen.strokeStyle = "red";
+            pen.stroke();
+            pen.closePath();
+        }
+
+        board.addEventListener("mousemove", (e) => {
+            const rect = board.getBoundingClientRect();
+            targetX = e.clientX - rect.left;
+            targetY = e.clientY - rect.top;
+        });
+
+        function animate() {
+            currentX += (targetX - currentX) * 0.2;
+            currentY += (targetY - currentY) * 0.2;
+            renderCircle(currentX, currentY);
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
